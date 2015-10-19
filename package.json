@@ -26,9 +26,6 @@
     "url": "https://github.com/router5/router5-listeners/issues"
   },
   "homepage": "http://router5.github.io",
-  "peerDependencies": {
-    "router5": ">=1.0.0"
-  },
   "devDependencies": {
     "babel": "^5.8.23",
     "babel-eslint": "^4.1.3",
