@@ -1,11 +1,11 @@
 {
-  "name": "router5",
-  "version": "0.6.3",
+  "name": "router5-listenres",
+  "version": "1.0.0",
   "homepage": "http://router5.github.io",
   "authors": [
     "Thomas Roch <thomas.c.roch@gmail.com>"
   ],
-  "description": "A framework agnostic HTML5 router",
+  "description": "Listeners plugin for router5",
   "main": "dist/browser/router5.min.js",
   "moduleType": [
     "amd",
@@ -15,7 +15,8 @@
   ],
   "keywords": [
     "router",
-    "HTML5"
+    "router5",
+    "Listeners"
   ],
   "license": "MIT",
   "ignore": [
@@ -31,6 +32,7 @@
     ".travis.yml",
     "karma.config.js",
     "package.json",
-    ".gitignore"
+    ".gitignore",
+    "gulpfile.js"
   ]
 }
