@@ -1,4 +1,6 @@
-[![Build Status](https://travis-ci.org/router5/router5-listeners.svg?branch=master)](https://travis-ci.org/router5/router5-listeners)
+[![npm version](https://badge.fury.io/js/router5-listeners.svg)](https://badge.fury.io/js/router5-listeners)
+[![Build Status](https://travis-ci.org/router5/router5-listeners.svg?branch=master)](https://travis-ci.org/router5/router5-listeners?branch=master)
+[![Coverage Status](https://coveralls.io/repos/router5/router5-listeners/badge.svg?branch=master&service=github)](https://coveralls.io/github/router5/router5-listeners?branch=master)
 
 # router5-listeners
 

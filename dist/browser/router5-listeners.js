@@ -1,6 +1,6 @@
 /**
  * @license
- * @version 1.0.0
+ * @version 1.0.0-rc1
  * The MIT License (MIT)
  * 
  * Copyright (c) Thomas Roch 2015
