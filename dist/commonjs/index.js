@@ -79,8 +79,8 @@ function listenersPlugin() {
         });
     }
 
-    function onTransitionSuccess(toState, fromState) {
-        var intersection = transitionIntersection(toState, fromState);
+    function onTransitionSuccess(toState, fromState, opts) {
+        var intersection = opts.reload ? '' : transitionIntersection(toState, fromState);
         var name = toState.name;
 
         invokeListeners('^' + intersection, toState, fromState);

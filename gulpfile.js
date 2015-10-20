@@ -11,13 +11,13 @@ var files = [
 ];
 
 var globalWrapper = {
-    header: '\n(function (window) {\n',
+    header: '\n(function (window) {\n"use strict";\n\n',
     footer: '\n}(window));\n',
     export: '\n\n    window.router5ListenersPlugin = listenersPlugin;\n'
 }
 
 var amdWrapper = {
-    header: "\ndefine('router5ListenersPlugin', [], function () {\n",
+    header: '\ndefine(\'router5ListenersPlugin\', [], function () {\n"use strict";\n\n',
     footer: '\n});\n',
     export: '\n\n    return listenersPlugin;'
 }
@@ -50,10 +50,9 @@ gulp.task('clean', function() {
 
 gulp.task('buildCommonJs', build('common', 'dist/commonjs'));
 gulp.task('buildUmd',      build('umd', 'dist/umd'));
-// gulp.task('buildTest',     build('ignore', 'temp/test'));/
 gulp.task('buildGlobal',   buildBundle('browser', globalWrapper));
 gulp.task('buildAmd',      buildBundle('amd', amdWrapper));
 
 gulp.task('build', function() {
-    runSequence('clean', ['buildCommonJs', 'buildUmd', 'buildGlobal', 'buildAmd'/*, 'buildTest'*/]);
+    runSequence('clean', ['buildCommonJs', 'buildUmd', 'buildGlobal', 'buildAmd']);
 });

@@ -1,8 +1,3 @@
-// var argv = require('yargs').argv;
-
-// var sauce  = argv.sauce;
-// var travis = !!process.env.TRAVIS_JOB_NUMBER;
-
 module.exports = function(config) {
     config.set({
         basePath: '',
@@ -11,11 +6,13 @@ module.exports = function(config) {
         autoWatch: false,
         singleRun: true,
 
-        // browsers: ['Firefox'],
-        browsers: sauce ? Object.keys(customLaunchers) : ['Firefox'],
+        browsers: ['Firefox'],
 
         files: [
-            'temp/test/index.js'
+            'node_modules/router5/dist/browser/router5.js',
+            'dist/browser/router5-listeners.js',
+            'test/create-router.js',
+            'test/main.js'
         ],
 
         preprocessors: {
@@ -29,7 +26,7 @@ module.exports = function(config) {
             'karma-mocha-reporter',
             'karma-coverage',
             'karma-coveralls'
-        ].concat(sauce ? 'karma-sauce-launcher' : []),
+        ],
 
         reporters: ['mocha', 'coverage', 'coveralls'],
 
@@ -38,8 +35,6 @@ module.exports = function(config) {
             reporters: [
                 {type: 'lcov'}
             ],
-        },
-
-        customLaunchers: customLaunchers
+        }
     });
 };

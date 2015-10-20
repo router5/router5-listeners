@@ -27,7 +27,7 @@ module.exports = function bundle(destFolder, wrapper) {
                 })
                 .join('\n');
 
-            var bundleContents = '"use strict";\n\n/**\n * @license\n * @version ' + pkgVersion + '\n' + license + '\n */' +
+            var bundleContents = '/**\n * @license\n * @version ' + pkgVersion + '\n' + license + '\n */' +
                 wrapper.header + buffer
                     .join('\n')
                     .split('\n')

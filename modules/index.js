@@ -59,20 +59,20 @@ function listenersPlugin() {
         (listeners[name] || []).forEach(cb => cb(toState, fromState));
     }
 
-    function onTransitionSuccess(toState, fromState) {
-        const intersection = transitionIntersection(toState, fromState);
+    function onTransitionSuccess(toState, fromState, opts) {
+        const intersection = opts.reload ? '' : transitionIntersection(toState, fromState);
         const { name } = toState;
 
         invokeListeners('^' + intersection, toState, fromState);
         invokeListeners('=' + name, toState, fromState);
         invokeListeners('*', toState, fromState);
-   }
+    }
 
-   function flush() {
+    function flush() {
         listeners = {};
-   }
+    }
 
-   return { name: pluginName, init, onTransitionSuccess, flush };
+    return { name: pluginName, init, onTransitionSuccess, flush };
 }
 
 export default listenersPlugin;

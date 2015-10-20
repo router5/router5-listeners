@@ -1,5 +1,3 @@
-"use strict";
-
 /**
  * @license
  * @version 1.0.0
@@ -25,7 +23,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-define('router5', [], function () {
+define('router5ListenersPlugin', [], function () {
+"use strict";
+
     var pluginName = 'LISTENERS';
     
     function transitionIntersection(toState, fromState) {
@@ -102,8 +102,8 @@ define('router5', [], function () {
             });
         }
     
-        function onTransitionSuccess(toState, fromState) {
-            var intersection = transitionIntersection(toState, fromState);
+        function onTransitionSuccess(toState, fromState, opts) {
+            var intersection = opts.reload ? '' : transitionIntersection(toState, fromState);
             var name = toState.name;
     
             invokeListeners('^' + intersection, toState, fromState);
@@ -118,5 +118,5 @@ define('router5', [], function () {
         return { name: pluginName, init: init, onTransitionSuccess: onTransitionSuccess, flush: flush };
     }
 
-    return {listenersPlugin: listenersPlugin};
+    return listenersPlugin;
 });

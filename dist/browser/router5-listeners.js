@@ -1,5 +1,3 @@
-"use strict";
-
 /**
  * @license
  * @version 1.0.0
@@ -26,6 +24,8 @@
  * SOFTWARE.
  */
 (function (window) {
+"use strict";
+
     var pluginName = 'LISTENERS';
     
     function transitionIntersection(toState, fromState) {
@@ -102,8 +102,8 @@
             });
         }
     
-        function onTransitionSuccess(toState, fromState) {
-            var intersection = transitionIntersection(toState, fromState);
+        function onTransitionSuccess(toState, fromState, opts) {
+            var intersection = opts.reload ? '' : transitionIntersection(toState, fromState);
             var name = toState.name;
     
             invokeListeners('^' + intersection, toState, fromState);
@@ -118,6 +118,6 @@
         return { name: pluginName, init: init, onTransitionSuccess: onTransitionSuccess, flush: flush };
     }
 
-    window.listenersPlugin = listenersPlugin;
+    window.router5ListenersPlugin = listenersPlugin;
 
 }(window));
