@@ -16,7 +16,7 @@ module.exports = function(config) {
         ],
 
         preprocessors: {
-          'temp/test/*.js': ['coverage']
+          'dist/browser/router5-listeners.js': ['coverage']
         },
 
         plugins: [
