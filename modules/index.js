@@ -19,17 +19,24 @@ function transitionIntersection(toState, fromState) {
         }
     }
 
-    return fromState && i > 0 ? fromStateIds[i - 1] : '';
+    const toDeactivate = fromStateIds.slice(i).reverse();
+    const intersection = fromState && i > 0 ? fromStateIds[i - 1] : '';
+    return {toDeactivate, intersection};
 }
 
 function listenersPlugin() {
     let listeners = {};
 
-    function init(router) {
-        const removeListener = (name, cb) => {
+    const removeListener = (name, cb) => {
+        if (cb) {
             if (listeners[name]) listeners[name] = listeners[name].filter(callback => callback !== cb);
-            return router;
-        };
+        } else {
+            listeners[name] = [];
+        }
+        return router;
+    };
+
+    function init(router) {
 
         const addListener = (name, cb, replace) => {
             const normalizedName = name.replace(/^(\*|\^|=)/, '');
@@ -60,8 +67,13 @@ function listenersPlugin() {
     }
 
     function onTransitionSuccess(toState, fromState, opts) {
-        const intersection = opts.reload ? '' : transitionIntersection(toState, fromState);
+        const {intersection, toDeactivate} = transitionIntersection(toState, fromState);
+        const intersectionNode = opts.reload ? '' : intersection;
         const { name } = toState;
+
+        if (router.options.autoCleanUp) {
+            toDeactivate.forEach(name => removeListener('^' + name));
+        }
 
         invokeListeners('^' + intersection, toState, fromState);
         invokeListeners('=' + name, toState, fromState);
@@ -72,7 +84,7 @@ function listenersPlugin() {
         listeners = {};
     }
 
-    return { name: pluginName, init, onTransitionSuccess, flush };
+    return { name: pluginName, init, onTransitionSuccess, flush, listeners };
 }
 
 export default listenersPlugin;

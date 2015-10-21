@@ -23,19 +23,26 @@ function transitionIntersection(toState, fromState) {
         }
     }
 
-    return fromState && i > 0 ? fromStateIds[i - 1] : '';
+    var toDeactivate = fromStateIds.slice(i).reverse();
+    var intersection = fromState && i > 0 ? fromStateIds[i - 1] : '';
+    return { toDeactivate: toDeactivate, intersection: intersection };
 }
 
 function listenersPlugin() {
     var listeners = {};
 
-    function init(router) {
-        var removeListener = function removeListener(name, cb) {
+    var removeListener = function removeListener(name, cb) {
+        if (cb) {
             if (listeners[name]) listeners[name] = listeners[name].filter(function (callback) {
                 return callback !== cb;
             });
-            return router;
-        };
+        } else {
+            listeners[name] = [];
+        }
+        return router;
+    };
+
+    function init(router) {
 
         var addListener = function addListener(name, cb, replace) {
             var normalizedName = name.replace(/^(\*|\^|=)/, '');
@@ -80,8 +87,19 @@ function listenersPlugin() {
     }
 
     function onTransitionSuccess(toState, fromState, opts) {
-        var intersection = opts.reload ? '' : transitionIntersection(toState, fromState);
+        var _transitionIntersection = transitionIntersection(toState, fromState);
+
+        var intersection = _transitionIntersection.intersection;
+        var toDeactivate = _transitionIntersection.toDeactivate;
+
+        var intersectionNode = opts.reload ? '' : intersection;
         var name = toState.name;
+
+        if (router.options.autoCleanUp) {
+            toDeactivate.forEach(function (name) {
+                return removeListener('^' + name);
+            });
+        }
 
         invokeListeners('^' + intersection, toState, fromState);
         invokeListeners('=' + name, toState, fromState);
@@ -92,7 +110,7 @@ function listenersPlugin() {
         listeners = {};
     }
 
-    return { name: pluginName, init: init, onTransitionSuccess: onTransitionSuccess, flush: flush };
+    return { name: pluginName, init: init, onTransitionSuccess: onTransitionSuccess, flush: flush, listeners: listeners };
 }
 
 exports['default'] = listenersPlugin;

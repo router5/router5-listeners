@@ -93,6 +93,7 @@ describe('listenersPlugin', function () {
                 router.navigate('users.view', {id: 1}, {}, function() {
                     router.navigate('users.view', {id: 2}, {}, function(err, state) {
                         expect(listeners.node.calls.count()).toBe(2);
+                        router.removeNodeListener('users', listeners.node);
                         done();
                     })
                 });
@@ -122,6 +123,18 @@ describe('listenersPlugin', function () {
                 done();
             });
         });
+    });
+
+    it('should automatically remove node listeners if autoCleanUp', function (done) {
+        router.navigate('orders.completed', {}, {}, function (err, state) {
+            router.addNodeListener('orders', listeners.node);
+            router.navigate('users', {}, {}, function (err, state) {
+                setTimeout(function () {
+                    expect(plugin.listeners['^orders']).toEqual([]);
+                    done();
+                });
+            });
+        })
     });
 
     it('should warn if trying to register a listener on an unknown route', function () {
