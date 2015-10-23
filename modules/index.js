@@ -26,6 +26,7 @@ function transitionIntersection(toState, fromState) {
 
 function listenersPlugin() {
     let listeners = {};
+    let router;
 
     const removeListener = (name, cb) => {
         if (cb) {
@@ -36,7 +37,8 @@ function listenersPlugin() {
         return router;
     };
 
-    function init(router) {
+    function init(target) {
+        router = target;
 
         const addListener = (name, cb, replace) => {
             const normalizedName = name.replace(/^(\*|\^|=)/, '');

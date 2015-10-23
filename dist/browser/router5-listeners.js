@@ -3,7 +3,7 @@
  * @version 1.0.0-rc1
  * The MIT License (MIT)
  * 
- * Copyright (c) Thomas Roch 2015
+ * Copyright (c) 2015 Thomas Roch
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -53,6 +53,7 @@
     
     function listenersPlugin() {
         var listeners = {};
+        var router = undefined;
     
         var removeListener = function removeListener(name, cb) {
             if (cb) {
@@ -65,7 +66,8 @@
             return router;
         };
     
-        function init(router) {
+        function init(target) {
+            router = target;
     
             var addListener = function addListener(name, cb, replace) {
                 var normalizedName = name.replace(/^(\*|\^|=)/, '');

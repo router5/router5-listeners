@@ -38,3 +38,8 @@ This plugin adds the following methods to your router instance:
 - `removeNodeListener(nodeName, fn)`
 - `addRouteListener(routeName, fn)`
 - `removeRouteListener(routeName, fn)`
+
+
+### Contributing
+
+Please read [contributing guidelines](https://github.com/router5/router5/blob/master/CONTRIBUTING.md) on router5 repository.

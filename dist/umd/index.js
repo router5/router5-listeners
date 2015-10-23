@@ -40,6 +40,7 @@
 
     function listenersPlugin() {
         var listeners = {};
+        var router = undefined;
 
         var removeListener = function removeListener(name, cb) {
             if (cb) {
@@ -52,7 +53,8 @@
             return router;
         };
 
-        function init(router) {
+        function init(target) {
+            router = target;
 
             var addListener = function addListener(name, cb, replace) {
                 var normalizedName = name.replace(/^(\*|\^|=)/, '');
