@@ -1,28 +1,6 @@
+import transitionPath from 'router5.transition-path';
+
 const pluginName = 'LISTENERS';
-
-function transitionIntersection(toState, fromState) {
-    const nameToIDs = name => {
-        return name.split('.').reduce((ids, name) => {
-            return ids.concat(ids.length ? ids[ids.length - 1] + '.' + name : name);
-        }, []);
-    };
-
-    let i;
-    const fromStateIds = fromState ? nameToIDs(fromState.name) : [];
-    const toStateIds = nameToIDs(toState.name);
-    const maxI = Math.min(fromStateIds.length, toStateIds.length);
-
-    if (fromState && fromState.name === toState.name) i = Math.max(maxI - 1, 0);
-    else {
-        for (i = 0; i < maxI; i += 1) {
-            if (fromStateIds[i] !== toStateIds[i]) break;
-        }
-    }
-
-    const toDeactivate = fromStateIds.slice(i).reverse();
-    const intersection = fromState && i > 0 ? fromStateIds[i - 1] : '';
-    return {toDeactivate, intersection};
-}
 
 function listenersPlugin() {
     let listeners = {};
@@ -69,7 +47,7 @@ function listenersPlugin() {
     }
 
     function onTransitionSuccess(toState, fromState, opts) {
-        const {intersection, toDeactivate} = transitionIntersection(toState, fromState);
+        const {intersection, toDeactivate} = transitionPath(toState, fromState);
         const intersectionNode = opts.reload ? '' : intersection;
         const { name } = toState;
 

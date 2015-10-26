@@ -1,42 +1,23 @@
 (function (global, factory) {
     if (typeof define === 'function' && define.amd) {
-        define(['exports', 'module'], factory);
+        define(['exports', 'module', 'router5.transition-path'], factory);
     } else if (typeof exports !== 'undefined' && typeof module !== 'undefined') {
-        factory(exports, module);
+        factory(exports, module, require('router5.transition-path'));
     } else {
         var mod = {
             exports: {}
         };
-        factory(mod.exports, mod);
+        factory(mod.exports, mod, global.transitionPath);
         global.index = mod.exports;
     }
-})(this, function (exports, module) {
+})(this, function (exports, module, _router5TransitionPath) {
     'use strict';
 
+    function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+    var _transitionPath2 = _interopRequireDefault(_router5TransitionPath);
+
     var pluginName = 'LISTENERS';
-
-    function transitionIntersection(toState, fromState) {
-        var nameToIDs = function nameToIDs(name) {
-            return name.split('.').reduce(function (ids, name) {
-                return ids.concat(ids.length ? ids[ids.length - 1] + '.' + name : name);
-            }, []);
-        };
-
-        var i = undefined;
-        var fromStateIds = fromState ? nameToIDs(fromState.name) : [];
-        var toStateIds = nameToIDs(toState.name);
-        var maxI = Math.min(fromStateIds.length, toStateIds.length);
-
-        if (fromState && fromState.name === toState.name) i = Math.max(maxI - 1, 0);else {
-            for (i = 0; i < maxI; i += 1) {
-                if (fromStateIds[i] !== toStateIds[i]) break;
-            }
-        }
-
-        var toDeactivate = fromStateIds.slice(i).reverse();
-        var intersection = fromState && i > 0 ? fromStateIds[i - 1] : '';
-        return { toDeactivate: toDeactivate, intersection: intersection };
-    }
 
     function listenersPlugin() {
         var listeners = {};
@@ -99,10 +80,10 @@
         }
 
         function onTransitionSuccess(toState, fromState, opts) {
-            var _transitionIntersection = transitionIntersection(toState, fromState);
+            var _transitionPath = (0, _transitionPath2['default'])(toState, fromState);
 
-            var intersection = _transitionIntersection.intersection;
-            var toDeactivate = _transitionIntersection.toDeactivate;
+            var intersection = _transitionPath.intersection;
+            var toDeactivate = _transitionPath.toDeactivate;
 
             var intersectionNode = opts.reload ? '' : intersection;
             var name = toState.name;

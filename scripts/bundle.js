@@ -32,6 +32,7 @@ module.exports = function bundle(destFolder, wrapper) {
                     .join('\n')
                     .split('\n')
                     .filter(function(line) {
+                        if (/^module.exports/.test(line)) return false;
                         for (var i = 0; i < babelHelpers.length; i += 1) {
                             if (babelHelpers[i].regex.test(line)) {
                                 if (babelHelpers[i].found === false) {

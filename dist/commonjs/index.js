@@ -3,30 +3,14 @@
 Object.defineProperty(exports, '__esModule', {
     value: true
 });
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _router5TransitionPath = require('router5.transition-path');
+
+var _router5TransitionPath2 = _interopRequireDefault(_router5TransitionPath);
+
 var pluginName = 'LISTENERS';
-
-function transitionIntersection(toState, fromState) {
-    var nameToIDs = function nameToIDs(name) {
-        return name.split('.').reduce(function (ids, name) {
-            return ids.concat(ids.length ? ids[ids.length - 1] + '.' + name : name);
-        }, []);
-    };
-
-    var i = undefined;
-    var fromStateIds = fromState ? nameToIDs(fromState.name) : [];
-    var toStateIds = nameToIDs(toState.name);
-    var maxI = Math.min(fromStateIds.length, toStateIds.length);
-
-    if (fromState && fromState.name === toState.name) i = Math.max(maxI - 1, 0);else {
-        for (i = 0; i < maxI; i += 1) {
-            if (fromStateIds[i] !== toStateIds[i]) break;
-        }
-    }
-
-    var toDeactivate = fromStateIds.slice(i).reverse();
-    var intersection = fromState && i > 0 ? fromStateIds[i - 1] : '';
-    return { toDeactivate: toDeactivate, intersection: intersection };
-}
 
 function listenersPlugin() {
     var listeners = {};
@@ -89,10 +73,10 @@ function listenersPlugin() {
     }
 
     function onTransitionSuccess(toState, fromState, opts) {
-        var _transitionIntersection = transitionIntersection(toState, fromState);
+        var _transitionPath = (0, _router5TransitionPath2['default'])(toState, fromState);
 
-        var intersection = _transitionIntersection.intersection;
-        var toDeactivate = _transitionIntersection.toDeactivate;
+        var intersection = _transitionPath.intersection;
+        var toDeactivate = _transitionPath.toDeactivate;
 
         var intersectionNode = opts.reload ? '' : intersection;
         var name = toState.name;

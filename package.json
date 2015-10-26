@@ -54,5 +54,8 @@
     "vinyl-fs": "^2.2.0",
     "vinyl-source-stream2": "^0.1.1",
     "yargs": "^3.27.0"
+  },
+  "dependencies": {
+    "router5.transition-path": "^1.0.0"
   }
 }
