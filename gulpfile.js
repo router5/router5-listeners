@@ -34,7 +34,7 @@ function build(modules, dest) {
 function buildBundle(dest, wrapper) {
     return function() {
         return gulp
-            .src(['node_modules/router5.transition-path/index.js'].concat(files))
+            .src(['node_modules/router5.transition-path/modules/index.js'].concat(files))
             .pipe(babel({modules: 'ignore', blacklist: ['strict'], auxiliaryCommentBefore: 'istanbul ignore next'}))
             .pipe(bundle(dest, wrapper))
             .pipe(gulp.dest('dist'))

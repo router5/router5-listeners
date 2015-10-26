@@ -33,7 +33,7 @@
             }, []);
         }
     
-        var i;
+        var i = undefined;
         var fromStateIds = fromState ? nameToIDs(fromState.name) : [];
         var toStateIds = nameToIDs(toState.name);
         var maxI = Math.min(fromStateIds.length, toStateIds.length);
@@ -56,7 +56,6 @@
             toActivate: toActivate
         };
     }
-    
     
     
     var pluginName = 'LISTENERS';

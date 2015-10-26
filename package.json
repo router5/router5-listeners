@@ -56,6 +56,6 @@
     "yargs": "^3.27.0"
   },
   "dependencies": {
-    "router5.transition-path": "^1.0.0"
+    "router5.transition-path": "^1.0.1"
   }
 }
