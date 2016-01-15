@@ -1,22 +1,22 @@
 import transitionPath from 'router5.transition-path';
 
 const pluginName = 'LISTENERS';
+const defaultOptions = {
+    autoCleanUp: true
+};
 
-function listenersPlugin() {
-    let listeners = {};
-    let router;
+function listenersPlugin(options = defaultOptions) {
+    return function plugin(router) {
+        let listeners = {};
 
-    const removeListener = (name, cb) => {
-        if (cb) {
-            if (listeners[name]) listeners[name] = listeners[name].filter(callback => callback !== cb);
-        } else {
-            listeners[name] = [];
-        }
-        return router;
-    };
-
-    function init(target) {
-        router = target;
+        const removeListener = (name, cb) => {
+            if (cb) {
+                if (listeners[name]) listeners[name] = listeners[name].filter(callback => callback !== cb);
+            } else {
+                listeners[name] = [];
+            }
+            return router;
+        };
 
         const addListener = (name, cb, replace) => {
             const normalizedName = name.replace(/^(\*|\^|=)/, '');
@@ -40,31 +40,31 @@ function listenersPlugin() {
 
         router.addRouteListener = (name, cb) => addListener('=' + name, cb);
         router.removeRouteListener = (name, cb) => removeListener('=' + name, cb);
-    }
 
-    function invokeListeners(name, toState, fromState) {
-        (listeners[name] || []).forEach(cb => cb(toState, fromState));
-    }
-
-    function onTransitionSuccess(toState, fromState, opts) {
-        const {intersection, toDeactivate} = transitionPath(toState, fromState);
-        const intersectionNode = opts.reload ? '' : intersection;
-        const { name } = toState;
-
-        if (router.options.autoCleanUp) {
-            toDeactivate.forEach(name => removeListener('^' + name));
+        function invokeListeners(name, toState, fromState) {
+            (listeners[name] || []).forEach(cb => cb(toState, fromState));
         }
 
-        invokeListeners('^' + intersection, toState, fromState);
-        invokeListeners('=' + name, toState, fromState);
-        invokeListeners('*', toState, fromState);
-    }
+        function onTransitionSuccess(toState, fromState, opts) {
+            const {intersection, toDeactivate} = transitionPath(toState, fromState);
+            const intersectionNode = opts.reload ? '' : intersection;
+            const { name } = toState;
 
-    function flush() {
-        listeners = {};
-    }
+            if (options.autoCleanUp) {
+                toDeactivate.forEach(name => removeListener('^' + name));
+            }
 
-    return { name: pluginName, init, onTransitionSuccess, flush, listeners };
+            invokeListeners('^' + intersection, toState, fromState);
+            invokeListeners('=' + name, toState, fromState);
+            invokeListeners('*', toState, fromState);
+        }
+
+        function flush() {
+            listeners = {};
+        }
+
+        return { name: pluginName, onTransitionSuccess, flush, listeners };
+    };
 }
 
 export default listenersPlugin;

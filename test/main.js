@@ -1,99 +1,84 @@
-var base = window.location.pathname;
-var router;
-var hashPrefix = '!';
-var plugin = router5ListenersPlugin();
+import createRouter from './create-router';
+import chai, { expect } from 'chai';
+import { spy, stub } from 'sinon';
+import sinonChai from 'sinon-chai';
+import router5ListenersPlugin from '../modules';
 
-var listeners = {
-    global: function (newState, oldState) {
-        return;
-    },
-    node: function nodeListener(newState, oldState) {
-        // Do nothing
-    }
-};
+chai.use(sinonChai);
+
+let router;
+const hashPrefix = '!';
+const plugin = router5ListenersPlugin();
 
 function getExpectedPath(useHash, path) {
     return useHash ? '#' + hashPrefix + path : path;
 }
 
-function getPath(useHash) {
-    if (useHash) return window.location.hash + window.location.search;
-    return window.location.pathname.replace(new RegExp('^' + base), '') + window.location.search;
-}
-
 describe('listenersPlugin', function () {
-    var useHash = false;
+    const useHash = false;
 
-    beforeAll(function () {
-        router = createRouter(base, useHash, hashPrefix);
+    before(function () {
+        router = createRouter();
         router.usePlugin(plugin);
     });
 
-    afterAll(function () {
+    after(function () {
         router.stop();
     });
 
     it('should be registered', function () {
-        expect(Object.keys(router.registeredPlugins)).toContain('LISTENERS');
+        expect(Object.keys(router.registeredPlugins)).to.contain('LISTENERS');
     });
 
    it('should call root node listener on first transition', function (done) {
         router.stop();
         router.setOption('defaultRoute', 'home');
-        window.history.replaceState({}, '', base);
-        spyOn(listeners, 'global').and.callThrough();
-        router.addNodeListener('', listeners.global);
+        const nodeListener = spy();
+        router.addNodeListener('', nodeListener);
 
         router.start(function (err, state) {
-            expect(state).toEqual({name: 'home', path: '/home', params: {}});
-            expect(listeners.global).toHaveBeenCalled();
+            expect(state).to.eql({_meta: {home: {}}, name: 'home', path: '/home', params: {}});
+            expect(nodeListener).to.have.been.called;
             done();
         });
     });
 
     it('should invoke listeners on navigation', function (done) {
         router.navigate('home', {}, {}, function () {
-            var previousState = router.lastKnownState;
-            spyOn(listeners, 'global').and.callThrough();
-            router.addListener(listeners.global);
+            const previousState = router.lastKnownState;
+            const listener = spy();
+            router.addListener(listener);
 
             router.navigate('orders.pending', {}, {}, function () {
-                expect(listeners.global).toHaveBeenCalledWith(router.lastKnownState, previousState);
-                router.removeListener(listeners.global);
+                expect(listener).to.have.been.calledWith(router.lastKnownState, previousState);
+                router.removeListener(listener);
                 done();
             });
         });
     });
 
-    it('should be able to remove listeners', function (done) {
-        spyOn(listeners, 'global').and.callThrough();
-
-        router.navigate('orders.view', {id: 123}, {replace: true}, function () {
-            expect(listeners.global).not.toHaveBeenCalled();
-            done();
-        });
-    });
-
     it('should not invoke listeners if trying to navigate to the current route', function (done) {
-        spyOn(listeners, 'global').and.callThrough();
-        router.addListener(listeners.global);
-
         router.navigate('orders.view', {id: 123}, {}, function () {
-            expect(listeners.global).not.toHaveBeenCalled();
-            done();
+            const listener = spy();
+            router.addListener(listener);
+
+            router.navigate('orders.view', {id: 123}, {}, function () {
+                expect(listener).not.to.have.been.called;
+                done();
+            });
         });
     });
 
     it('should invoke node listeners', function (done) {
         router.navigate('users.list', {}, {}, function () {
-            spyOn(listeners, 'node').and.callThrough();
-            router.addNodeListener('users', listeners.node);
+            const nodeListener = spy();
+            router.addNodeListener('users', nodeListener);
             router.navigate('users.view', {id: 1}, {}, function () {
-                expect(listeners.node).toHaveBeenCalled();
+                expect(nodeListener).to.have.been.called;
                 router.navigate('users.view', {id: 1}, {}, function() {
                     router.navigate('users.view', {id: 2}, {}, function(err, state) {
-                        expect(listeners.node.calls.count()).toBe(2);
-                        router.removeNodeListener('users', listeners.node);
+                        expect(nodeListener).to.have.been.calledTwice;
+                        router.removeNodeListener('users', nodeListener);
                         done();
                     })
                 });
@@ -103,11 +88,11 @@ describe('listenersPlugin', function () {
 
     it('should invoke node listeners on root', function (done) {
         router.navigate('orders', {}, {}, function () {
-            spyOn(listeners, 'node').and.returnValue(true);
-            router.addNodeListener('', listeners.node);
+            const nodeListener = spy();
+            router.addNodeListener('', nodeListener);
             router.navigate('users', {}, {}, function () {
-                expect(listeners.node).toHaveBeenCalled();
-                router.removeNodeListener('', listeners.node);
+                expect(nodeListener).to.have.been.called;
+                router.removeNodeListener('', nodeListener);
                 done();
             });
         });
@@ -115,11 +100,11 @@ describe('listenersPlugin', function () {
 
     it('should invoke route listeners', function (done) {
         router.navigate('users.list', {}, {}, function () {
-            spyOn(listeners, 'node').and.callThrough();
-            router.addRouteListener('users', listeners.node);
+            const nodeListener = spy();
+            router.addRouteListener('users', nodeListener);
             router.navigate('users', {}, {}, function () {
-                expect(listeners.node).toHaveBeenCalled();
-                router.removeRouteListener('users', listeners.node);
+                expect(nodeListener).to.have.been.called;
+                router.removeRouteListener('users', nodeListener);
                 done();
             });
         });
@@ -127,10 +112,10 @@ describe('listenersPlugin', function () {
 
     it('should automatically remove node listeners if autoCleanUp', function (done) {
         router.navigate('orders.completed', {}, {}, function (err, state) {
-            router.addNodeListener('orders', listeners.node);
+            router.addNodeListener('orders', () => {});
             router.navigate('users', {}, {}, function (err, state) {
                 setTimeout(function () {
-                    expect(plugin.listeners['^orders']).toEqual([]);
+                    expect(router.registeredPlugins['LISTENERS'].listeners['^orders']).to.eql([]);
                     done();
                 });
             });
@@ -138,9 +123,9 @@ describe('listenersPlugin', function () {
     });
 
     it('should warn if trying to register a listener on an unknown route', function () {
-        spyOn(console, 'warn');
+        stub(console, 'warn');
         router.addRouteListener('fake.route', function () {});
-        expect(console.warn).toHaveBeenCalled;
-        plugin.flush();
+        expect(console.warn).to.have.been.called;
+        router.registeredPlugins['LISTENERS'].flush();
     });
 });
