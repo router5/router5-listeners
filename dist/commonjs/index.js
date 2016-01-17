@@ -1,20 +1,19 @@
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+var _router = require('router5.transition-path');
 
-var _router5TransitionPath = require('router5.transition-path');
+var _router2 = _interopRequireDefault(_router);
 
-var _router5TransitionPath2 = _interopRequireDefault(_router5TransitionPath);
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var pluginName = 'LISTENERS';
 
-function listenersPlugin() {
+function listenersPlugin(router) {
     var listeners = {};
-    var router = undefined;
 
     var removeListener = function removeListener(name, cb) {
         if (cb) {
@@ -27,44 +26,40 @@ function listenersPlugin() {
         return router;
     };
 
-    function init(target) {
-        router = target;
+    var addListener = function addListener(name, cb, replace) {
+        var normalizedName = name.replace(/^(\*|\^|=)/, '');
 
-        var addListener = function addListener(name, cb, replace) {
-            var normalizedName = name.replace(/^(\*|\^|=)/, '');
+        if (normalizedName && !/^\$/.test(name)) {
+            var segments = router.rootNode.getSegmentsByName(normalizedName);
+            if (!segments) console.warn('No route found for ' + normalizedName + ', listener might never be called!');
+        }
 
-            if (normalizedName && !/^\$/.test(name)) {
-                var segments = router.rootNode.getSegmentsByName(normalizedName);
-                if (!segments) console.warn('No route found for ' + normalizedName + ', listener might never be called!');
-            }
+        if (!listeners[name]) listeners[name] = [];
+        listeners[name] = (replace ? [] : listeners[name]).concat(cb);
 
-            if (!listeners[name]) listeners[name] = [];
-            listeners[name] = (replace ? [] : listeners[name]).concat(cb);
+        return router;
+    };
 
-            return router;
-        };
+    router.addListener = function (cb) {
+        return addListener('*', cb);
+    };
+    router.removeListener = function (cb) {
+        return removeListener('*', cb);
+    };
 
-        router.addListener = function (cb) {
-            return addListener('*', cb);
-        };
-        router.removeListener = function (cb) {
-            return removeListener('*', cb);
-        };
+    router.addNodeListener = function (name, cb) {
+        return addListener('^' + name, cb, true);
+    };
+    router.removeNodeListener = function (name, cb) {
+        return removeListener('^' + name, cb);
+    };
 
-        router.addNodeListener = function (name, cb) {
-            return addListener('^' + name, cb, true);
-        };
-        router.removeNodeListener = function (name, cb) {
-            return removeListener('^' + name, cb);
-        };
-
-        router.addRouteListener = function (name, cb) {
-            return addListener('=' + name, cb);
-        };
-        router.removeRouteListener = function (name, cb) {
-            return removeListener('=' + name, cb);
-        };
-    }
+    router.addRouteListener = function (name, cb) {
+        return addListener('=' + name, cb);
+    };
+    router.removeRouteListener = function (name, cb) {
+        return removeListener('=' + name, cb);
+    };
 
     function invokeListeners(name, toState, fromState) {
         (listeners[name] || []).forEach(function (cb) {
@@ -73,7 +68,7 @@ function listenersPlugin() {
     }
 
     function onTransitionSuccess(toState, fromState, opts) {
-        var _transitionPath = (0, _router5TransitionPath2['default'])(toState, fromState);
+        var _transitionPath = (0, _router2.default)(toState, fromState);
 
         var intersection = _transitionPath.intersection;
         var toDeactivate = _transitionPath.toDeactivate;
@@ -99,5 +94,5 @@ function listenersPlugin() {
     return { name: pluginName, init: init, onTransitionSuccess: onTransitionSuccess, flush: flush, listeners: listeners };
 }
 
-exports['default'] = listenersPlugin;
+exports.default = listenersPlugin;
 module.exports = exports['default'];

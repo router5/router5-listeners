@@ -1,4 +1,8 @@
-define('router5ListenersPlugin', function () { 'use strict';
+(function (global, factory) {
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+    typeof define === 'function' && define.amd ? define('router5ListenersPlugin', factory) :
+    (global.router5ListenersPlugin = factory());
+}(this, function () { 'use strict';
 
     var babelHelpers_typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
       return typeof obj;
@@ -178,4 +182,4 @@ define('router5ListenersPlugin', function () { 'use strict';
 
     return listenersPlugin;
 
-});
+}));

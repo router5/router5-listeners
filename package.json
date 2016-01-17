@@ -57,5 +57,8 @@
   },
   "dependencies": {
     "router5.transition-path": "~2.0.4"
+  },
+  "peerDependencies": {
+    "router5": "^2.0.0"
   }
 }
