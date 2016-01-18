@@ -1,6 +1,6 @@
 {
   "name": "router5-listeners",
-  "version": "1.0.0",
+  "version": "2.0.0-rc.1",
   "description": "Listeners plugin for router5",
   "main": "dist/commonjs/index.js",
   "scripts": {
@@ -50,7 +50,7 @@
     "rollup-plugin-babel": "^2.3.6",
     "rollup-plugin-npm": "^1.2.0",
     "rollup-plugin-uglify": "^0.1.0",
-    "router5": "router5/router5#v2",
+    "router5": "2.0.0-rc.1",
     "sinon": "^1.17.2",
     "sinon-chai": "^2.8.0",
     "yargs": "^3.27.0"
@@ -59,6 +59,6 @@
     "router5.transition-path": "~2.0.4"
   },
   "peerDependencies": {
-    "router5": ">=1.0.0"
+    "router5": "2.0.0-rc.1"
   }
 }
