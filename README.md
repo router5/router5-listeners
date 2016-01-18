@@ -20,7 +20,7 @@ Sources are distributed through:
 ### How to use
 
 ```javascript
-import { Router5 }     from 'router5'
+import { Router5 }     from 'router5';
 import listenersPlugin from 'router5-listeners';
 
 const router = new Router5()
