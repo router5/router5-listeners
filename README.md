@@ -4,7 +4,7 @@
 
 # router5-listeners
 
-Listeners plugin for router5@1.0.0 (not published yet, follow progress [here](https://github.com/router5/router5/pull/30))
+Listeners plugin for router5@2.0.0.
 
 ### How to install
 
@@ -25,7 +25,7 @@ import listenersPlugin from 'router5-listeners';
 
 const router = new Router5()
     .addNode('home', '/home')
-    .usePlugin(listenersPluglin());
+    .usePlugin(listenersPlugin());
 ```
 
 ### API
