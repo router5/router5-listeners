@@ -1,3 +1,9 @@
+<a name="3.0.0"></a>
+# [3.0.0](https://github.com/router5/router5-listeners/compare/v2.0.0...v3.0.0) (2016-02-28)
+
+
+
+
 <a name="2.0.0-rc.1"></a>
 # [2.0.0-rc.1](https://github.com/router5/router5-listeners/compare/v1.0.0...v2.0.0-rc.1) (2016-01-18)
 

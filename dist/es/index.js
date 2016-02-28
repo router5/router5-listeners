@@ -1,14 +1,4 @@
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _router = require('router5.transition-path');
-
-var _router2 = _interopRequireDefault(_router);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+import transitionPath from 'router5.transition-path';
 
 var pluginName = 'LISTENERS';
 var defaultOptions = {
@@ -74,7 +64,7 @@ function listenersPlugin() {
         }
 
         function onTransitionSuccess(toState, fromState, opts) {
-            var _transitionPath = (0, _router2.default)(toState, fromState);
+            var _transitionPath = transitionPath(toState, fromState);
 
             var intersection = _transitionPath.intersection;
             var toDeactivate = _transitionPath.toDeactivate;
@@ -101,4 +91,4 @@ function listenersPlugin() {
     };
 }
 
-exports.default = listenersPlugin;
+export default listenersPlugin;
