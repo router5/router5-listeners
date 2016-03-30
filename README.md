@@ -15,7 +15,7 @@ The `dist` folder contains:
 
 Sources are distributed through:
 - bower (`bower install router5-listeners`)
-- npm (`bower install --save router5-listeners`)
+- npm (`npm install --save router5-listeners`)
 
 ### How to use
 
