@@ -2,9 +2,11 @@
 [![Build Status](https://travis-ci.org/router5/router5-listeners.svg?branch=master)](https://travis-ci.org/router5/router5-listeners?branch=master)
 [![Coverage Status](https://coveralls.io/repos/router5/router5-listeners/badge.svg?branch=master&service=github)](https://coveralls.io/github/router5/router5-listeners?branch=master)
 
-# router5-listeners
+# [DEPRECATED] router5-listeners
 
-Listeners plugin for router5@2.0.0.
+## From version 4 and above of router5, this module is no longer needed and code has been moved to [router5](https://github.com/router5/router5) main repo. Refer to http://router5.github.io/docs/migration-4.html for more details.
+
+Listeners plugin for router5@3.0.0.
 
 ### How to install
 
